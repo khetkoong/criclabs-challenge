@@ -1,17 +1,22 @@
 import { Button, ButtonProps } from '@mui/material'
 import React from 'react'
 
-const MyButton = (props: ButtonProps) => {
+interface MyButtonType extends ButtonProps {
+  isGreen?: boolean
+}
+
+export default function MyButton(props: MyButtonType) {
   return (
     <Button
       {...props}
-      sx={{
-        textTransform: 'none'
-      }}
+      sx={(theme) => ({
+        textTransform: 'none',
+        ...props?.isGreen && {
+          border: `1px solid ${theme.palette.success.main}`
+        }
+      })}
     >
       {props.children}
     </Button>
   )
 }
-
-export default MyButton

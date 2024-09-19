@@ -113,7 +113,7 @@ export default function DrawerWrapper(props: DrawerWrapperProps) {
           </Box>
         </Box>
       </Drawer >
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5' }}>
         <Toolbar />
         {children}
       </Box>

@@ -4,12 +4,16 @@
 import DrawerWrapper from './components/Drawer'
 import IconBreadcrumbs from './components/Breadcrumbs'
 // import { createClient } from './utils/supabase/client'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import MyButton from './components/Button'
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
 import VerticalAlignBottomRoundedIcon from '@mui/icons-material/VerticalAlignBottomRounded'
 import VerticalAlignTopRoundedIcon from '@mui/icons-material/VerticalAlignTopRounded'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
+import MyButtonToggle from './components/ToggleButton'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
+import DataTable from './components/DataTable'
 
 export default function Page() {
   // const [departments, setDepartments] = useState([{ id: '', name: '' }])
@@ -31,26 +35,45 @@ export default function Page() {
         <Typography variant="h5" fontWeight="bold">
           Data Mapping
         </Typography>
-        <Box display="flex" gap={2}>
+        <Stack direction="row" spacing={2}>
           <MyButton variant="outlined">
-            <FilterListRoundedIcon sx={{ mr: 0.5 }} />
+            <FilterListRoundedIcon fontSize="small" sx={{ mr: 0.5 }} />
             Filter
           </MyButton>
           <MyButton variant="outlined">
-            <VerticalAlignBottomRoundedIcon sx={{ mr: 0.5 }} />
+            <VerticalAlignBottomRoundedIcon fontSize="small" sx={{ mr: 0.5 }} />
             Export
           </MyButton>
           <MyButton variant="outlined">
-            <VerticalAlignTopRoundedIcon sx={{ mr: 0.5 }} />
+            <VerticalAlignTopRoundedIcon fontSize="small" sx={{ mr: 0.5 }} />
             Import
           </MyButton>
           <MyButton variant="contained" color="success">
-            <AddRoundedIcon sx={{ mr: 0.5 }} />
+            <AddRoundedIcon fontSize="small" sx={{ mr: 0.5 }} />
             New Data
           </MyButton>
-        </Box>
+        </Stack>
       </Box>
-
+      <Box mt={2}>
+        <MyButtonToggle />
+      </Box>
+      <Box mt={2}>
+        <Stack direction="row" spacing={2}>
+          <MyButton variant="outlined" isGreen>
+            <EditOutlinedIcon fontSize="small" color="success" sx={{ mr: 0.5 }} />
+            <Typography color="success">
+              Edit
+            </Typography>
+          </MyButton>
+          <MyButton variant="outlined">
+            <RemoveRedEyeOutlinedIcon fontSize="small" sx={{ mr: 0.5 }} />
+            Visualize
+          </MyButton>
+        </Stack>
+      </Box>
+      <Box mt={2}>
+        <DataTable />
+      </Box>
       {/* {departments.map((d) => (
         <Box key={d?.id}>
           <Typography>
