@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react'
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid'
 import Paper from '@mui/material/Paper'
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import { createClient } from '../utils/supabase/client'
 
 const columns: GridColDef[] = [
   { field: 'title', headerName: 'Title', flex: 1, filterable: false, hideable: false },
@@ -43,28 +41,14 @@ interface Rows {
   data_subject_type: string
 }
 
-const initRows = [] as Rows[]
-
 const paginationModel = { page: 0, pageSize: 5 }
 
-export default function DataTable() {
-  const [rows, setRows] = useState<Rows[]>(initRows)
+interface DataTableProps {
+  rows: Rows[]
+}
 
-  useEffect(() => {
-    (async () => {
-      const supabase = createClient()
-      const { data } = await supabase.from('data_mappings').select('*')
-      const formattedData = data?.map((d) => ({
-        id: d?.id,
-        title: d?.title,
-        description: d?.description,
-        department: d?.department,
-        data_subject_type: d?.data_subject_type,
-      })) as Rows[]
-      setRows(formattedData)
-    })()
-  }, [])
-
+export default function DataTable(props: DataTableProps) {
+  const { rows } = props
   return (
     <Paper sx={{ height: '100%', width: '100%' }}>
       <DataGrid

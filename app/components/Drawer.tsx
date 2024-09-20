@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar'
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { ReactNode } from 'react'
+import { memo, ReactNode } from 'react'
 import MergeTypeRoundedIcon from '@mui/icons-material/MergeTypeRounded'
 import { Avatar, CardActionArea, IconButton } from '@mui/material'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
@@ -48,7 +48,7 @@ const MENUS = [
   }
 ]
 
-export default function DrawerWrapper(props: DrawerWrapperProps) {
+const DrawerWrapper = (props: DrawerWrapperProps) => {
   const { children } = props
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
@@ -120,3 +120,5 @@ export default function DrawerWrapper(props: DrawerWrapperProps) {
     </Box >
   )
 }
+
+export default memo(DrawerWrapper)

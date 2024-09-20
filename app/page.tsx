@@ -1,9 +1,8 @@
 'use client'
 
-// import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import DrawerWrapper from './components/Drawer'
 import IconBreadcrumbs from './components/Breadcrumbs'
-// import { createClient } from './utils/supabase/client'
 import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import MyButton from './components/Button'
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
@@ -14,10 +13,52 @@ import MyButtonToggle from './components/ToggleButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import DataTable from './components/DataTable'
+import DrawerAddData from './components/DrawerAddData'
+import { createClient } from './utils/supabase/client'
+
+interface Rows {
+  id: number
+  title: string
+  description: string
+  department: string
+  data_subject_type: string
+}
+
+const initRows = [] as Rows[]
 
 export default function Page() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const [openDrawerAdd, setOpenDrawerAdd] = useState(false)
+  const [rows, setRows] = useState<Rows[]>(initRows)
+
+  const onCloseDrawerAdd = (shouldFetchNewData = false) => {
+    setOpenDrawerAdd(false)
+    if (shouldFetchNewData) {
+      fetchDataMapping()
+    }
+  }
+
+  const onOpenDrawerAdd = () => {
+    setOpenDrawerAdd(true)
+  }
+
+  const fetchDataMapping = async () => {
+    const supabase = createClient()
+    const { data } = await supabase.from('data_mappings').select('*')
+    const formattedData = data?.map((d) => ({
+      id: d?.id,
+      title: d?.title,
+      description: d?.description,
+      department: d?.department,
+      data_subject_type: d?.data_subject_type,
+    })) as Rows[]
+    setRows(formattedData)
+  }
+
+  useEffect(() => {
+    fetchDataMapping()
+  }, [])
 
   return (
     <DrawerWrapper>
@@ -57,6 +98,7 @@ export default function Page() {
             {...isMobile && {
               fullWidth: true
             }}
+            onClick={onOpenDrawerAdd}
           >
             New Data
           </MyButton>
@@ -80,15 +122,12 @@ export default function Page() {
         </Stack>
       </Box>
       <Box mt={2} sx={{ height: '60%' }}>
-        <DataTable />
+        <DataTable rows={rows} />
       </Box>
-      {/* {departments.map((d) => (
-        <Box key={d?.id}>
-          <Typography>
-            {d?.name}
-          </Typography>
-        </Box>
-      ))} */}
+      <DrawerAddData
+        open={openDrawerAdd}
+        onClose={onCloseDrawerAdd}
+      />
     </DrawerWrapper>
   )
 }

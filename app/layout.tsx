@@ -1,5 +1,6 @@
 'use client'
 
+import SnackbarProvider from './components/SnackbarProvider'
 import "./globals.css"
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 
@@ -49,7 +50,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ThemeProvider theme={theme}>
-          {children}
+          <SnackbarProvider>
+            {children}
+          </SnackbarProvider>
         </ThemeProvider>
       </body>
     </html>
