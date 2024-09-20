@@ -11,6 +11,8 @@ export default function MyButton(props: MyButtonType) {
       {...props}
       sx={(theme) => ({
         textTransform: 'none',
+        minWidth: 'max-content',
+        whiteSpace: 'nowrap',
         ...props?.isGreen && {
           border: `1px solid ${theme.palette.success.main}`
         }

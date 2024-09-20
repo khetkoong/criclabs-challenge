@@ -29,7 +29,7 @@ export default function MyButtonToggle() {
               color: 'disabled'
             })}
           />
-          <Typography color={selected === 'dataMapping' ? 'black' : '#878787'}>
+          <Typography color={selected === 'dataMapping' ? 'black' : '#878787'} noWrap>
             Data Mapping
           </Typography>
         </Stack>
@@ -43,13 +43,13 @@ export default function MyButtonToggle() {
         })
       }}
         onClick={() => setSelected('connectionSources')}>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} overflow="auto">
           <FolderOpenRoundedIcon
             {...(selected !== 'connectionSources') && ({
               color: 'disabled'
             })}
           />
-          <Typography color={selected === 'connectionSources' ? 'black' : '#878787'}>
+          <Typography color={selected === 'connectionSources' ? 'black' : '#878787'} noWrap>
             Collection sources
           </Typography>
         </Stack>

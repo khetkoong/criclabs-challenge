@@ -53,7 +53,6 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
-  console.log('------------------------------> 🦦🧸 ~ isDesktop:', isDesktop)
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
@@ -68,7 +67,7 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
             <Box display="flex" gap={2} alignItems="center">
               <SecurityRoundedIcon fontSize="large" color="success" />
               <Box display="flex" gap={1} alignItems="center">
-                <Typography variant="h6" noWrap component="div">
+                <Typography variant={isMobile ? "button" : "h6"} noWrap component="div">
                   PDPA / International School
                 </Typography>
                 <IconButton sx={{ color: "black" }} aria-label="expand-more" size="small">
@@ -119,16 +118,16 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
           </Box>
         </Drawer>
       )}
-      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5', width: "100%" }}>
-        <Toolbar />
-        {isMobile && (
-          <Box sx={{ overflow: 'auto', pb: 2, borderBottom: '1px solid #E0E0E0' }}>
+      {isMobile ? (
+        <Box component="main" sx={{ flexGrow: 1, p: 0, backgroundColor: '#f5f5f5', width: "100%" }}>
+          <Toolbar />
+          <Box sx={{ overflow: 'auto', p: 2, borderBottom: '1px solid #E0E0E0' }}>
             <Stack direction="row">
               {MENUS.map((menu, index) => (
                 <CardActionArea key={index} sx={{
                   marginRight: index !== MENUS.length - 1 ? 1.5 : 0,
                   borderRadius: 1,
-                  padding: 0.5,
+                  // padding: 0.5,
                   width: '100%'
                 }}>
                   <Box display="flex" gap={1}>
@@ -139,15 +138,22 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
               ))}
             </Stack>
           </Box>
-        )}
-        <Box
-          {...isMobile && {
-            mt: 3
-          }}
-        >
+          <Box
+            px={2}
+            pb={2}
+            {...isMobile && {
+              mt: 2
+            }}
+          >
+            {children}
+          </Box>
+        </Box>
+      ) : (
+        <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5', width: "100%" }}>
+          <Toolbar />
           {children}
         </Box>
-      </Box>
+      )}
     </Box>
   )
 }
