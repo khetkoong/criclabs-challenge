@@ -6,7 +6,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import { memo, ReactNode } from 'react'
 import MergeTypeRoundedIcon from '@mui/icons-material/MergeTypeRounded'
-import { Avatar, CardActionArea, IconButton } from '@mui/material'
+import { Avatar, CardActionArea, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded'
 import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded'
@@ -50,6 +50,10 @@ const MENUS = [
 
 const DrawerWrapper = (props: DrawerWrapperProps) => {
   const { children } = props
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
+  console.log('------------------------------> 🦦🧸 ~ isDesktop:', isDesktop)
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
@@ -81,43 +85,70 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
           </Box>
         </Toolbar>
       </AppBar >
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
+      {isDesktop && (
+        <Drawer
+          variant="permanent"
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-            borderRight: 'none',
-            backgroundColor: '#f5f5f5'
-          },
-          display: { xs: 'none', sm: 'none', md: 'block' }
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
-          <Box padding={2.5}>
-            {MENUS.map((menu, index) => (
-              <CardActionArea key={index} sx={{
-                marginTop: index !== 0 ? 1.5 : 0,
-                borderRadius: 1,
-                padding: 0.5
-              }} >
-                <Box display="flex" gap={1}>
-                  {menu?.icon}
-                  <Typography color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
-                </Box>
-              </CardActionArea>
-            ))}
+            flexShrink: 0,
+            [`& .MuiDrawer-paper`]: {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+              borderRight: 'none',
+              backgroundColor: '#f5f5f5'
+            },
+            // display: { xs: 'none', sm: 'none', md: 'block' }
+          }}
+        >
+          <Toolbar />
+          <Box sx={{ overflow: 'auto' }}>
+            <Box padding={2.5}>
+              {MENUS.map((menu, index) => (
+                <CardActionArea key={index} sx={{
+                  marginTop: index !== 0 ? 1.5 : 0,
+                  borderRadius: 1,
+                  padding: 0.5
+                }} >
+                  <Box display="flex" gap={1}>
+                    {menu?.icon}
+                    <Typography color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
+                  </Box>
+                </CardActionArea>
+              ))}
+            </Box>
           </Box>
-        </Box>
-      </Drawer >
-      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5' }}>
+        </Drawer>
+      )}
+      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5', width: "100%" }}>
         <Toolbar />
-        {children}
+        {isMobile && (
+          <Box sx={{ overflow: 'auto', pb: 2, borderBottom: '1px solid #E0E0E0' }}>
+            <Stack direction="row">
+              {MENUS.map((menu, index) => (
+                <CardActionArea key={index} sx={{
+                  marginRight: index !== MENUS.length - 1 ? 1.5 : 0,
+                  borderRadius: 1,
+                  padding: 0.5,
+                  width: '100%'
+                }}>
+                  <Box display="flex" gap={1}>
+                    {menu?.icon}
+                    <Typography noWrap color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
+                  </Box>
+                </CardActionArea>
+              ))}
+            </Stack>
+          </Box>
+        )}
+        <Box
+          {...isMobile && {
+            mt: 3
+          }}
+        >
+          {children}
+        </Box>
       </Box>
-    </Box >
+    </Box>
   )
 }
 

@@ -45,13 +45,15 @@ const paginationModel = { page: 0, pageSize: 5 }
 
 interface DataTableProps {
   rows: Rows[]
+  loading?: boolean
 }
 
 export default function DataTable(props: DataTableProps) {
-  const { rows } = props
+  const { rows, loading } = props
   return (
     <Paper sx={{ height: '100%', width: '100%' }}>
       <DataGrid
+        loading={loading}
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}

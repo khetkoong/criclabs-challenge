@@ -15,6 +15,7 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import DataTable from './components/DataTable'
 import DrawerAddData from './components/DrawerAddData'
 import { createClient } from './utils/supabase/client'
+import { useSnackbar } from './context/SnackbarContext'
 
 interface Rows {
   id: number
@@ -28,9 +29,11 @@ const initRows = [] as Rows[]
 
 export default function Page() {
   const theme = useTheme()
+  const { message } = useSnackbar()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [openDrawerAdd, setOpenDrawerAdd] = useState(false)
   const [rows, setRows] = useState<Rows[]>(initRows)
+  const [loading, setLoading] = useState(false)
 
   const onCloseDrawerAdd = (shouldFetchNewData = false) => {
     setOpenDrawerAdd(false)
@@ -44,16 +47,23 @@ export default function Page() {
   }
 
   const fetchDataMapping = async () => {
-    const supabase = createClient()
-    const { data } = await supabase.from('data_mappings').select('*')
-    const formattedData = data?.map((d) => ({
-      id: d?.id,
-      title: d?.title,
-      description: d?.description,
-      department: d?.department,
-      data_subject_type: d?.data_subject_type,
-    })) as Rows[]
-    setRows(formattedData)
+    setLoading(true)
+    try {
+      const supabase = createClient()
+      const { data } = await supabase.from('data_mappings').select('*')
+      const formattedData = data?.map((d) => ({
+        id: d?.id,
+        title: d?.title,
+        description: d?.description,
+        department: d?.department,
+        data_subject_type: d?.data_subject_type,
+      })) as Rows[]
+      setRows(formattedData)
+    } catch (error) {
+      message('error', 'Something went wrong!')
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -122,7 +132,7 @@ export default function Page() {
         </Stack>
       </Box>
       <Box mt={2} sx={{ height: '60%' }}>
-        <DataTable rows={rows} />
+        <DataTable rows={rows} loading={loading} />
       </Box>
       <DrawerAddData
         open={openDrawerAdd}
