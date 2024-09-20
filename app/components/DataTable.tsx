@@ -54,7 +54,6 @@ export default function DataTable() {
     (async () => {
       const supabase = createClient()
       const { data } = await supabase.from('data_mappings').select('*')
-      console.log('------------------------------> 🦦🧸 ~ data:', data)
       const formattedData = data?.map((d) => ({
         id: d?.id,
         title: d?.title,
@@ -65,8 +64,6 @@ export default function DataTable() {
       setRows(formattedData)
     })()
   }, [])
-
-  // console.log('departments: ', departments)
 
   return (
     <Paper sx={{ height: '100%', width: '100%' }}>
