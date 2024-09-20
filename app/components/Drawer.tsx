@@ -51,7 +51,7 @@ const MENUS = [
 export default function DrawerWrapper(props: DrawerWrapperProps) {
   const { children } = props
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
       <AppBar elevation={0} position="fixed" sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,

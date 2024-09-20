@@ -71,7 +71,7 @@ export default function Page() {
           </MyButton>
         </Stack>
       </Box>
-      <Box mt={2}>
+      <Box mt={2} sx={{ height: '60%' }}>
         <DataTable />
       </Box>
       {/* {departments.map((d) => (
