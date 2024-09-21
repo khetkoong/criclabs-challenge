@@ -1,6 +1,6 @@
-import { Box, Button, Checkbox, Container, Drawer, FormControlLabel, FormGroup, InputBase, InputLabel, Paper, Stack, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { ChangeEvent, Dispatch, LegacyRef, memo, SetStateAction, useEffect, useRef, useState } from 'react'
-import Input, { OptionsType } from './Input'
+import { Box, Checkbox, Drawer, FormControlLabel, FormGroup, InputBase, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
+import React, { ChangeEvent, Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
+import { OptionsType } from './Input'
 import { createClient } from '../utils/supabase/client'
 import { useSnackbar } from '../context/SnackbarContext'
 import MyButton from './Button'
@@ -37,9 +37,10 @@ const DrawerFilter = (props: DrawerFilterProps) => {
 
   const onSubmit = async () => {
     try {
-      let instanceSupabase = supabase
+      const instanceSupabase = supabase
         .from('data_mappings')
         .select("*")
+        .order('id', { ascending: false })
 
       let findDepartment = ''
       for (const [key, value] of Object.entries(values?.department)) {
@@ -82,7 +83,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
       setRows(formattedData)
       onClose()
     } catch (error) {
-      message('error', 'Something went wrong!')
+      message('error', `Something went wrong!: ${error}`)
     }
   }
 
@@ -107,9 +108,9 @@ const DrawerFilter = (props: DrawerFilterProps) => {
     }
   }, [open])
 
-  const handleDrawerAddClose = () => {
+  const handleDrawerAddClose = (shouldFetchNewData = false) => {
     setValues(initialValues)
-    onClose(true)
+    onClose(shouldFetchNewData)
   }
 
   const handleChangeCheckbox = (event: ChangeEvent<HTMLInputElement>, fieldName: 'department' | 'data_subject_type') => {
@@ -126,7 +127,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
     <Drawer
       anchor={isMobile ? "bottom" : "right"}
       open={open}
-      onClose={handleDrawerAddClose}
+      onClose={() => handleDrawerAddClose()}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
@@ -141,7 +142,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
               </Typography>
             </Stack>
             <Stack direction="row" spacing={2}>
-              <MyButton variant="text" color="inherit" onClick={handleDrawerAddClose} disabled={false}>
+              <MyButton variant="text" color="inherit" onClick={() => handleDrawerAddClose(true)} disabled={false}>
                 Reset
               </MyButton>
               <MyButton variant="contained" color="success" onClick={onSubmit} disabled={false}>
@@ -182,7 +183,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
               </Typography>
               <FormGroup>
                 {dataSubjectTypeOptions.map((d) => (
-                  <FormControlLabel key={d?.id} control={<Checkbox checked={values?.department[d?.name]} color="success" name={d?.name} onChange={(e) => handleChangeCheckbox(e, 'data_subject_type')} />} label={d?.name} />
+                  <FormControlLabel key={d?.id} control={<Checkbox checked={values?.data_subject_type[d?.name]} color="success" name={d?.name} onChange={(e) => handleChangeCheckbox(e, 'data_subject_type')} />} label={d?.name} />
                 ))}
               </FormGroup>
             </Box>

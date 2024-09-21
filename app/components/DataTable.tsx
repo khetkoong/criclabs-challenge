@@ -5,6 +5,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { createClient } from '../utils/supabase/client'
 import { useSnackbar } from '../context/SnackbarContext'
 import { useMemo } from 'react'
+import { useMediaQuery, useTheme } from '@mui/material'
 
 interface Rows {
   id: number
@@ -29,19 +30,22 @@ export default function DataTable(props: DataTableProps) {
     loading,
     fetchDataMapping
   } = props
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   const generateColumns = () => {
     return [
-      { field: 'title', headerName: 'Title', flex: 1, filterable: false, hideable: false },
+      { field: 'title', headerName: 'Title', flex: 0.5, filterable: false, hideable: false },
       { field: 'description', headerName: 'Description', flex: 1, filterable: false, hideable: false },
       { field: 'department', headerName: 'Departments', flex: 1, filterable: false, hideable: false },
       { field: 'data_subject_type', headerName: 'Data Subject Types', flex: 1, filterable: false, hideable: false },
       {
-        field: 'action', headerName: '', flex: 1, filterable: false, hideable: false,
+        field: 'action', headerName: '', flex: 0.5, filterable: false, hideable: false,
         type: 'actions',
         getActions: ({ id }) => {
           return [
             <GridActionsCellItem
+              key={id}
               icon={<BorderColorOutlinedIcon />}
               label="Edit"
               className="textPrimary"
@@ -49,6 +53,7 @@ export default function DataTable(props: DataTableProps) {
               color="inherit"
             />,
             <GridActionsCellItem
+              key={id}
               icon={<DeleteOutlineOutlinedIcon color="error" />}
               label="Delete"
               onClick={() => handleDeleteClick(id as number)}
@@ -72,20 +77,37 @@ export default function DataTable(props: DataTableProps) {
       message('success', 'Delete Success')
       fetchDataMapping()
     } catch (error) {
-      message('error', 'Something went wrong')
+      message('error', `Something went wrong: ${error}`)
     }
   }
 
 
   return (
-    <Paper sx={{ height: '100%', width: '100%' }}>
+    <Paper sx={{ height: '100%', width: '100%', overflowX: 'auto', textWrap: 'nowrap' }}>
       <DataGrid
         loading={loading}
         rows={rows}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
-        sx={{ border: 0 }}
+        sx={{
+          border: 0,
+          width: !isMobile ? '100%' : 900,
+          '& .MuiDataGrid-virtualScroller': {
+            overflow: 'hidden'
+          }
+        }}
+        autosizeOptions={{
+          columns: [
+            'title',
+            'description',
+            'department',
+            'data_subject_type',
+            'action',
+          ],
+          includeOutliers: true,
+          includeHeaders: true,
+        }}
       />
     </Paper>
   )

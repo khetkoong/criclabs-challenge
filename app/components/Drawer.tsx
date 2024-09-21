@@ -4,7 +4,7 @@ import AppBar from '@mui/material/AppBar'
 import CssBaseline from '@mui/material/CssBaseline'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-import { memo, ReactNode } from 'react'
+import { memo, ReactNode, useEffect, useState } from 'react'
 import MergeTypeRoundedIcon from '@mui/icons-material/MergeTypeRounded'
 import { Avatar, CardActionArea, IconButton, Stack, useMediaQuery, useTheme } from '@mui/material'
 import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded'
@@ -14,6 +14,7 @@ import StorageRoundedIcon from '@mui/icons-material/StorageRounded'
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded'
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined'
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined'
+import Loading from './Loading'
 
 const drawerWidth = 300
 
@@ -52,7 +53,13 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
   const { children } = props
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
+
+  const [isMount, setIsMount] = useState(false)
+
+  useEffect(() => {
+    setIsMount(true)
+  }, [])
+
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
       <CssBaseline />
@@ -67,7 +74,11 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
             <Box display="flex" gap={2} alignItems="center">
               <SecurityRoundedIcon fontSize="large" color="success" />
               <Box display="flex" gap={1} alignItems="center">
-                <Typography variant={isMobile ? "button" : "h6"} noWrap component="div">
+                <Typography
+                  variant={isMobile ? "button" : "h6"}
+                  noWrap
+                  component="div"
+                >
                   PDPA / International School
                 </Typography>
                 <IconButton sx={{ color: "black" }} aria-label="expand-more" size="small">
@@ -84,76 +95,80 @@ const DrawerWrapper = (props: DrawerWrapperProps) => {
           </Box>
         </Toolbar>
       </AppBar >
-      {isDesktop && (
-        <Drawer
-          variant="permanent"
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: {
-              width: drawerWidth,
-              boxSizing: 'border-box',
-              borderRight: 'none',
-              backgroundColor: '#f5f5f5'
-            },
-            // display: { xs: 'none', sm: 'none', md: 'block' }
-          }}
-        >
-          <Toolbar />
-          <Box sx={{ overflow: 'auto' }}>
-            <Box padding={2.5}>
-              {MENUS.map((menu, index) => (
-                <CardActionArea key={index} sx={{
-                  marginTop: index !== 0 ? 1.5 : 0,
-                  borderRadius: 1,
-                  padding: 0.5
-                }} >
-                  <Box display="flex" gap={1}>
-                    {menu?.icon}
-                    <Typography color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
-                  </Box>
-                </CardActionArea>
-              ))}
+      {isMount ? (
+        <>
+          {!isMobile && (
+            <Drawer
+              variant="permanent"
+              sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: {
+                  width: drawerWidth,
+                  boxSizing: 'border-box',
+                  borderRight: 'none',
+                  backgroundColor: '#f5f5f5'
+                },
+              }}
+            >
+              <Toolbar />
+              <Box sx={{ overflow: 'auto' }}>
+                <Box padding={2.5}>
+                  {MENUS.map((menu, index) => (
+                    <CardActionArea key={index} sx={{
+                      marginTop: index !== 0 ? 1.5 : 0,
+                      borderRadius: 1,
+                      padding: 0.5
+                    }} >
+                      <Box display="flex" gap={1}>
+                        {menu?.icon}
+                        <Typography color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
+                      </Box>
+                    </CardActionArea>
+                  ))}
+                </Box>
+              </Box>
+            </Drawer>
+          )}
+          {isMobile ? (
+            <Box component="main" sx={{ flexGrow: 1, p: 0, backgroundColor: '#f5f5f5', width: "100%" }}>
+              <Toolbar />
+              <Box sx={{ overflow: 'auto', p: 2, borderBottom: '1px solid #E0E0E0' }}>
+                <Stack direction="row">
+                  {MENUS.map((menu, index) => (
+                    <CardActionArea key={index} sx={{
+                      marginRight: index !== MENUS.length - 1 ? 1.5 : 0,
+                      borderRadius: 1,
+                      // padding: 0.5,
+                      width: '100%'
+                    }}>
+                      <Box display="flex" gap={1}>
+                        {menu?.icon}
+                        <Typography noWrap color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
+                      </Box>
+                    </CardActionArea>
+                  ))}
+                </Stack>
+              </Box>
+              <Box
+                px={2}
+                pb={2}
+                {...isMobile && {
+                  mt: 2
+                }}
+                height="80%"
+              >
+                {children}
+              </Box>
             </Box>
-          </Box>
-        </Drawer>
-      )}
-      {isMobile ? (
-        <Box component="main" sx={{ flexGrow: 1, p: 0, backgroundColor: '#f5f5f5', width: "100%" }}>
-          <Toolbar />
-          <Box sx={{ overflow: 'auto', p: 2, borderBottom: '1px solid #E0E0E0' }}>
-            <Stack direction="row">
-              {MENUS.map((menu, index) => (
-                <CardActionArea key={index} sx={{
-                  marginRight: index !== MENUS.length - 1 ? 1.5 : 0,
-                  borderRadius: 1,
-                  // padding: 0.5,
-                  width: '100%'
-                }}>
-                  <Box display="flex" gap={1}>
-                    {menu?.icon}
-                    <Typography noWrap color={index === 0 ? 'success' : 'black'}>{menu?.name}</Typography>
-                  </Box>
-                </CardActionArea>
-              ))}
-            </Stack>
-          </Box>
-          <Box
-            px={2}
-            pb={2}
-            {...isMobile && {
-              mt: 2
-            }}
-          >
-            {children}
-          </Box>
-        </Box>
-      ) : (
-        <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5', width: "100%" }}>
-          <Toolbar />
-          {children}
-        </Box>
-      )}
+          ) : (
+            <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: '#f5f5f5', width: "100%" }}>
+              <Toolbar />
+              {children}
+            </Box>
+          )}
+        </>
+      ) : <Loading />}
     </Box>
   )
 }

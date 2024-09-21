@@ -1,7 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
-import DrawerWrapper from './components/Drawer'
+import { useEffect, useState } from 'react'
 import IconBreadcrumbs from './components/Breadcrumbs'
 import { Box, Stack, Typography, useMediaQuery, useTheme } from '@mui/material'
 import MyButton from './components/Button'
@@ -63,7 +62,7 @@ export default function Page() {
     setLoading(true)
     try {
       const supabase = createClient()
-      const { data } = await supabase.from('data_mappings').select('*')
+      const { data } = await supabase.from('data_mappings').select('*').order('id', { ascending: false })
       const formattedData = data?.map((d) => ({
         id: d?.id,
         title: d?.title,
@@ -74,7 +73,7 @@ export default function Page() {
 
       setRows(formattedData)
     } catch (error) {
-      message('error', 'Something went wrong!')
+      message('error', `Something went wrong!: ${error}`)
     } finally {
       setLoading(false)
     }
@@ -85,7 +84,7 @@ export default function Page() {
   }, [])
 
   return (
-    <DrawerWrapper>
+    <>
       <IconBreadcrumbs />
       <Box mt={2} display={{ sx: 'block', sm: 'flex' }} justifyContent="space-between" alignItems="center">
         <Typography variant="h5" fontWeight="bold">
@@ -161,6 +160,6 @@ export default function Page() {
         onClose={onCloseDrawerFilter}
         setRows={setRows}
       />
-    </DrawerWrapper>
+    </>
   )
 }
