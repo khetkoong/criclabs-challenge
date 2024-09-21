@@ -1,27 +1,22 @@
-import Stack from '@mui/material/Stack'
 import { useState } from 'react'
-import { CardActionArea, Typography } from '@mui/material'
+import { CardActionArea, Stack, Typography } from '@mui/material'
 import MergeTypeRoundedIcon from '@mui/icons-material/MergeTypeRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 
 export default function MyButtonToggle() {
   const [selected, setSelected] = useState('dataMapping')
 
-  const buttonStyle = {
-    width: 'fit-content',
-    padding: 0.5,
-  }
-
   return (
-    <Stack direction="row" spacing={1} sx={{ borderBottom: '1px solid #E0E0E0' }}>
-      <CardActionArea sx={{
-        ...buttonStyle,
-        ...(selected === 'dataMapping' ? {
-          borderBottom: '2px solid #2e7d32'
-        } : {
-          paddingTop: '2px'
-        })
-      }}
+    <Stack direction="row" spacing={1} sx={styles.container}>
+      <CardActionArea
+        sx={{
+          ...styles.button,
+          ...(selected === 'dataMapping' ? {
+            borderBottom: '2px solid #2e7d32'
+          } : {
+            paddingTop: '2px'
+          })
+        }}
         onClick={() => setSelected('dataMapping')}>
         <Stack direction="row" spacing={1}>
           <MergeTypeRoundedIcon
@@ -34,14 +29,15 @@ export default function MyButtonToggle() {
           </Typography>
         </Stack>
       </CardActionArea>
-      <CardActionArea sx={{
-        ...buttonStyle,
-        ...(selected === 'connectionSources' ? {
-          borderBottom: '2px solid #2e7d32'
-        } : {
-          paddingTop: '2px'
-        })
-      }}
+      <CardActionArea
+        sx={{
+          ...styles.button,
+          ...(selected === 'connectionSources' ? {
+            borderBottom: '2px solid #2e7d32'
+          } : {
+            paddingTop: '2px'
+          })
+        }}
         onClick={() => setSelected('connectionSources')}>
         <Stack direction="row" spacing={1} overflow="auto">
           <FolderOpenRoundedIcon
@@ -57,3 +53,13 @@ export default function MyButtonToggle() {
     </Stack>
   )
 }
+
+const styles = {
+  container: {
+    borderBottom: '1px solid #E0E0E0'
+  },
+  button: {
+    width: 'fit-content',
+    padding: 0.5,
+  }
+} as const

@@ -1,11 +1,7 @@
 'use client'
 
-import Button from '@mui/material/Button'
-import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar'
-import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close'
-import { Fragment, ReactNode, useState } from 'react'
-import { Alert, AlertColor } from '@mui/material'
+import { ReactNode, useState } from 'react'
+import { Alert, AlertColor, Snackbar, SnackbarCloseReason } from '@mui/material'
 import { SnackbarContext } from '../context/SnackbarContext'
 
 interface SnackbarProviderProps {

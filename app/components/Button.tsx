@@ -1,5 +1,4 @@
 import { Button, ButtonProps } from '@mui/material'
-import React from 'react'
 
 interface MyButtonType extends ButtonProps {
   isGreen?: boolean
@@ -10,9 +9,7 @@ export default function MyButton(props: MyButtonType) {
     <Button
       {...props}
       sx={(theme) => ({
-        textTransform: 'none',
-        minWidth: 'max-content',
-        whiteSpace: 'nowrap',
+        ...styles.button,
         ...props?.isGreen && {
           border: `1px solid ${theme.palette.success.main}`
         }
@@ -22,3 +19,11 @@ export default function MyButton(props: MyButtonType) {
     </Button>
   )
 }
+
+const styles = {
+  button: {
+    textTransform: 'none',
+    minWidth: 'max-content',
+    whiteSpace: 'nowrap',
+  }
+} as const

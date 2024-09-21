@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
+import Box from '@mui/material/Box'
 
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   event.preventDefault()
@@ -11,13 +12,9 @@ function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
 
 export default function IconBreadcrumbs() {
   return (
-    <div role="presentation" onClick={handleClick}>
+    <Box role="presentation" onClick={handleClick}>
       <Breadcrumbs aria-label="breadcrumb"
-        sx={{
-          '& .MuiBreadcrumbs-separator': {
-            color: '#D0D0D0'
-          }
-        }}>
+        sx={styles.breadcrumb}>
         <Link
           underline="hover"
           sx={{ display: 'flex', alignItems: 'center' }}
@@ -27,11 +24,24 @@ export default function IconBreadcrumbs() {
           <HomeOutlinedIcon sx={{ color: "black" }} />
         </Link>
         <Typography
-          sx={{ color: '#D0D0D0', display: 'flex', alignItems: 'center' }}
+          sx={styles.breadcrumbTextPath}
         >
           Current path
         </Typography>
       </Breadcrumbs>
-    </div>
+    </Box>
   )
 }
+
+const styles = {
+  breadcrumb: {
+    '& .MuiBreadcrumbs-separator': {
+      color: '#D0D0D0'
+    }
+  },
+  breadcrumbTextPath: {
+    color: '#D0D0D0',
+    display: 'flex',
+    alignItems: 'center'
+  }
+} as const

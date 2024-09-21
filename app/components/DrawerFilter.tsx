@@ -1,5 +1,5 @@
+import { ChangeEvent, Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
 import { Box, Checkbox, Drawer, FormControlLabel, FormGroup, InputBase, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { ChangeEvent, Dispatch, memo, SetStateAction, useEffect, useState } from 'react'
 import { OptionsType } from './Input'
 import { createClient } from '../utils/supabase/client'
 import { useSnackbar } from '../context/SnackbarContext'
@@ -133,7 +133,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
       }}
     >
       <Box width={isMobile ? 'auto' : 400}>
-        <Toolbar sx={{ borderBottom: "1px solid #F0F0F0" }}>
+        <Toolbar sx={styles.borderBottom}>
           <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
             <Stack direction="row" spacing={1}>
               <FilterListRoundedIcon />
@@ -155,7 +155,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
           e.preventDefault()
           onSubmit()
         }}>
-          <Box sx={{ borderBottom: "1px solid #F0F0F0" }}>
+          <Box sx={styles.borderBottom}>
             <Stack direction="row" spacing={1} p={2}>
               <SearchIcon fontSize="large" color="disabled" />
               <InputBase
@@ -193,5 +193,11 @@ const DrawerFilter = (props: DrawerFilterProps) => {
     </Drawer>
   )
 }
+
+const styles = {
+  borderBottom: {
+    borderBottom: "1px solid #F0F0F0"
+  }
+} as const
 
 export default memo(DrawerFilter)

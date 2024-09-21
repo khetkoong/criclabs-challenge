@@ -42,8 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <CssBaseline />
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <SnackbarProvider>
             <DrawerWrapper>
               {children}

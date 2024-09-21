@@ -1,12 +1,14 @@
+import { useMemo, useRef, useState } from 'react'
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid'
 import Paper from '@mui/material/Paper'
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { createClient } from '../utils/supabase/client'
 import { useSnackbar } from '../context/SnackbarContext'
-import { useMemo, useRef, useState } from 'react'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, useMediaQuery, useTheme } from '@mui/material'
 import MyButton from './Button'
+
+const paginationModel = { page: 0, pageSize: 5 }
 
 interface Rows {
   id: number
@@ -15,8 +17,6 @@ interface Rows {
   department: string
   data_subject_type: string
 }
-
-const paginationModel = { page: 0, pageSize: 5 }
 
 interface DataTableProps {
   rows: Rows[]
@@ -101,7 +101,7 @@ export default function DataTable(props: DataTableProps) {
 
   return (
     <>
-      <Paper sx={{ height: '100%', width: '100%', overflowX: 'auto', textWrap: 'nowrap' }}>
+      <Paper sx={styles.paper}>
         <DataGrid
           loading={loading}
           rows={rows}
@@ -127,7 +127,6 @@ export default function DataTable(props: DataTableProps) {
             includeHeaders: true,
           }}
         />
-
       </Paper>
       <Dialog onClose={handleClose} open={openConfirmModal}>
         <DialogTitle>Confirm delete data?</DialogTitle>
@@ -156,3 +155,12 @@ export default function DataTable(props: DataTableProps) {
     </>
   )
 }
+
+const styles = {
+  paper: {
+    height: '100%',
+    width: '100%',
+    overflowX: 'auto',
+    textWrap: 'nowrap'
+  }
+} as const

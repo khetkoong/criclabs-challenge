@@ -1,5 +1,5 @@
-import { Box, Drawer, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import { Box, Drawer, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Input, { OptionsType } from './Input'
 import { createClient } from '../utils/supabase/client'
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -134,7 +134,7 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
               disabled={isSubmitting}
             />
             <Input
-              label="Description"
+              label="Description (Optional)"
               name="description"
               control={control}
               type="text"

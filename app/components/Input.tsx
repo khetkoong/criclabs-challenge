@@ -1,5 +1,6 @@
-import { InputLabel, Box, TextField, FormHelperText, Select, MenuItem } from '@mui/material'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { memo } from 'react'
+import { InputLabel, Box, TextField, FormHelperText, Select, MenuItem } from '@mui/material'
 import { Controller } from 'react-hook-form'
 
 export interface OptionsType {
@@ -35,7 +36,7 @@ const Input = (props: InputProps) => {
 
   return (
     <>
-      <InputLabel sx={{ color: 'black' }} error={error}>
+      <InputLabel sx={styles?.textBlack} error={error}>
         {label}
       </InputLabel>
       <Box mt={1}>
@@ -70,12 +71,12 @@ const Input = (props: InputProps) => {
                     multiple: true
                   }}
                   fullWidth
-                  sx={{ '& legend': { display: 'none' }, '& fieldset': { top: 0 }, }}
+                  sx={styles.removeLabel}
                   size="small"
                 >
                   {options && options.map((o) => <MenuItem key={o?.id} value={o?.name}>{o?.name}</MenuItem>)}
                 </Select>
-                <FormHelperText error={error} sx={{ mt: "4px", mx: "14px" }}>
+                <FormHelperText error={error} sx={styles.helperBox}>
                   {helperText}
                 </FormHelperText>
               </>
@@ -86,5 +87,23 @@ const Input = (props: InputProps) => {
     </>
   )
 }
+
+const styles = {
+  textBlack: {
+    color: 'black'
+  },
+  removeLabel: {
+    '& legend': {
+      display: 'none'
+    },
+    '& fieldset': {
+      top: 0
+    },
+  },
+  helperBox: {
+    mt: "4px",
+    mx: "14px"
+  }
+} as const
 
 export default memo(Input)
