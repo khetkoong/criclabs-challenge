@@ -18,7 +18,7 @@ import DrawerFilter from './components/DrawerFilter'
 import { createClient } from './utils/supabase/client'
 import { useSnackbar } from './context/SnackbarContext'
 
-interface Rows {
+export interface Rows {
   id: number
   title: string
   description: string
@@ -71,19 +71,6 @@ export default function Page() {
         department: d?.department,
         data_subject_type: d?.data_subject_type,
       })) as Rows[]
-
-
-      // let { data: data_mappings, error } = await supabase
-      //   .from('data_mappings')
-      //   .select("*")
-
-      // // Filters
-      // // .like('title', '%khet%')
-      // // .ilike('data_subject_type', '%Employees%')
-      // // .ilike('data_subject_type', '%Students%')
-      // // .ilike('data_subject_type', '%Faculty Staff%')
-
-      // console.log('------------------------------> 🦦🧸 ~ data_mappings:', data_mappings)
 
       setRows(formattedData)
     } catch (error) {
@@ -159,7 +146,11 @@ export default function Page() {
         </Stack>
       </Box>
       <Box mt={2} sx={{ height: '60%' }}>
-        <DataTable rows={rows} loading={loading} />
+        <DataTable
+          rows={rows}
+          loading={loading}
+          fetchDataMapping={fetchDataMapping}
+        />
       </Box>
       <DrawerAddData
         open={openDrawerAdd}
@@ -168,6 +159,7 @@ export default function Page() {
       <DrawerFilter
         open={openDrawerFilter}
         onClose={onCloseDrawerFilter}
+        setRows={setRows}
       />
     </DrawerWrapper>
   )
