@@ -8,6 +8,9 @@ export default function Loading() {
       width="100vw"
       alignItems="center"
       justifyContent="center"
+      sx={{
+        backgroundColor: "#f5f5f5"
+      }}
     >
       <CircularProgress color="success" />
     </Box>
