@@ -1,4 +1,4 @@
-import { Box, Drawer, InputLabel, Paper, Stack, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Button, Checkbox, Container, Drawer, FormControlLabel, FormGroup, InputBase, InputLabel, Paper, Stack, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
 import React, { LegacyRef, memo, useEffect, useRef, useState } from 'react'
 import Input, { OptionsType } from './Input'
 import { createClient } from '../utils/supabase/client'
@@ -7,8 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import z from "zod"
 import { useSnackbar } from '../context/SnackbarContext'
 import MyButton from './Button'
+import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
+import SearchIcon from '@mui/icons-material/Search'
 
-interface DrawerAddDataProps {
+interface DrawerFilterProps {
   open: boolean
   onClose: (shouldFetchNewData?: boolean) => void
 }
@@ -27,7 +29,7 @@ const schema = z.object({
   data_subject_type: z.array(z.string())
 })
 
-const DrawerAddData = (props: DrawerAddDataProps) => {
+const DrawerFilter = (props: DrawerFilterProps) => {
   const {
     open,
     onClose
@@ -108,20 +110,54 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
       <Box width={isMobile ? 'auto' : 400}>
         <Toolbar sx={{ borderBottom: "1px solid #F0F0F0" }}>
           <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-            <Typography>
-              New Data
-            </Typography>
+            <Stack direction="row" spacing={1}>
+              <FilterListRoundedIcon />
+              <Typography>
+                Filter
+              </Typography>
+            </Stack>
             <Stack direction="row" spacing={2}>
               <MyButton variant="text" color="inherit" onClick={handleDrawerAddClose} disabled={isSubmitting}>
-                Cancel
+                Reset
               </MyButton>
               <MyButton variant="contained" color="success" onClick={() => submitRef?.current?.click?.()} disabled={isSubmitting}>
-                Save
+                Apply Filter
               </MyButton>
             </Stack>
           </Box>
         </Toolbar>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={{ borderBottom: "1px solid #F0F0F0" }}>
+          <Stack direction="row" spacing={1} p={2}>
+            <SearchIcon fontSize="large" color="disabled" />
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              placeholder="Search filter"
+            />
+          </Stack>
+        </Box>
+        <Box p={3}>
+          <Box>
+            <Typography color="textDisabled">
+              DEPARTMENT
+            </Typography>
+            <FormGroup>
+              {departmentOptions.map((d) => (
+                <FormControlLabel key={d?.id} control={<Checkbox color="success" />} label={d?.name} />
+              ))}
+            </FormGroup>
+          </Box>
+          <Box mt={2}>
+            <Typography color="textDisabled">
+              DATA SUBJECT TYPE
+            </Typography>
+            <FormGroup>
+              {dataSubjectTypeOptions.map((d) => (
+                <FormControlLabel key={d?.id} control={<Checkbox color="success" />} label={d?.name} />
+              ))}
+            </FormGroup>
+          </Box>
+        </Box>
+        {/* <form onSubmit={handleSubmit(onSubmit)}>
           <button type="submit" ref={submitRef as any} hidden />
           <Stack direction="column" spacing={1} p={3}>
             <Input
@@ -161,10 +197,10 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
               disabled={isSubmitting}
             />
           </Stack>
-        </form>
+        </form> */}
       </Box>
     </Drawer>
   )
 }
 
-export default memo(DrawerAddData)
+export default memo(DrawerFilter)

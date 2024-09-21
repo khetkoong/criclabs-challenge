@@ -14,6 +14,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined'
 import DataTable from './components/DataTable'
 import DrawerAddData from './components/DrawerAddData'
+import DrawerFilter from './components/DrawerFilter'
 import { createClient } from './utils/supabase/client'
 import { useSnackbar } from './context/SnackbarContext'
 
@@ -32,6 +33,7 @@ export default function Page() {
   const { message } = useSnackbar()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [openDrawerAdd, setOpenDrawerAdd] = useState(false)
+  const [openDrawerFilter, setOpenDrawerFilter] = useState(false)
   const [rows, setRows] = useState<Rows[]>(initRows)
   const [loading, setLoading] = useState(false)
 
@@ -46,6 +48,17 @@ export default function Page() {
     setOpenDrawerAdd(true)
   }
 
+  const onCloseDrawerFilter = (shouldFetchNewData = false) => {
+    setOpenDrawerFilter(false)
+    if (shouldFetchNewData) {
+      fetchDataMapping()
+    }
+  }
+
+  const onOpenDrawerFilter = () => {
+    setOpenDrawerFilter(true)
+  }
+
   const fetchDataMapping = async () => {
     setLoading(true)
     try {
@@ -58,6 +71,20 @@ export default function Page() {
         department: d?.department,
         data_subject_type: d?.data_subject_type,
       })) as Rows[]
+
+
+      // let { data: data_mappings, error } = await supabase
+      //   .from('data_mappings')
+      //   .select("*")
+
+      // // Filters
+      // // .like('title', '%khet%')
+      // // .ilike('data_subject_type', '%Employees%')
+      // // .ilike('data_subject_type', '%Students%')
+      // // .ilike('data_subject_type', '%Faculty Staff%')
+
+      // console.log('------------------------------> 🦦🧸 ~ data_mappings:', data_mappings)
+
       setRows(formattedData)
     } catch (error) {
       message('error', 'Something went wrong!')
@@ -80,7 +107,7 @@ export default function Page() {
         <Stack direction="row" spacing={2} mt={{ md: 0, xs: 2 }} width="auto">
           {!isMobile ? (
             <>
-              <MyButton variant="outlined" startIcon={<FilterListRoundedIcon />}>
+              <MyButton variant="outlined" startIcon={<FilterListRoundedIcon />} onClick={onOpenDrawerFilter}>
                 Filter
               </MyButton>
               <MyButton variant="outlined" startIcon={<VerticalAlignBottomRoundedIcon />}>
@@ -92,7 +119,7 @@ export default function Page() {
             </>
           ) : (
             <>
-              <MyButton variant="outlined">
+              <MyButton variant="outlined" onClick={onOpenDrawerFilter}>
                 <FilterListRoundedIcon />
               </MyButton>
               <MyButton variant="outlined">
@@ -137,6 +164,10 @@ export default function Page() {
       <DrawerAddData
         open={openDrawerAdd}
         onClose={onCloseDrawerAdd}
+      />
+      <DrawerFilter
+        open={openDrawerFilter}
+        onClose={onCloseDrawerFilter}
       />
     </DrawerWrapper>
   )
