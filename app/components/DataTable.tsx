@@ -4,8 +4,9 @@ import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { createClient } from '../utils/supabase/client'
 import { useSnackbar } from '../context/SnackbarContext'
-import { useMemo } from 'react'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { useMemo, useRef, useState } from 'react'
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, useMediaQuery, useTheme } from '@mui/material'
+import MyButton from './Button'
 
 interface Rows {
   id: number
@@ -30,8 +31,11 @@ export default function DataTable(props: DataTableProps) {
     loading,
     fetchDataMapping
   } = props
+  const [openConfirmModal, setOpenConfirmModal] = useState(false)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const deleteRef = useRef<number>()
+  const [deleteLoading, setDeleteLoading] = useState(false)
 
   const generateColumns = () => {
     return [
@@ -68,47 +72,87 @@ export default function DataTable(props: DataTableProps) {
   const columns: GridColDef[] = useMemo(() => generateColumns(), [])
 
   const handleDeleteClick = async (id: number) => {
+    deleteRef.current = id
+    setOpenConfirmModal(true)
+  }
+
+  const handleDeleteData = async () => {
+    setDeleteLoading(true)
     try {
       const supabase = createClient()
       await supabase
         .from('data_mappings')
         .delete()
-        .eq('id', id)
+        .eq('id', deleteRef.current)
       message('success', 'Delete Success')
       fetchDataMapping()
+      handleClose()
     } catch (error) {
       message('error', `Something went wrong: ${error}`)
+    } finally {
+      setDeleteLoading(false)
     }
   }
 
+  const handleClose = () => {
+    deleteRef.current = undefined
+    setOpenConfirmModal(false)
+  }
 
   return (
-    <Paper sx={{ height: '100%', width: '100%', overflowX: 'auto', textWrap: 'nowrap' }}>
-      <DataGrid
-        loading={loading}
-        rows={rows}
-        columns={columns}
-        initialState={{ pagination: { paginationModel } }}
-        pageSizeOptions={[5, 10]}
-        sx={{
-          border: 0,
-          width: !isMobile ? '100%' : 900,
-          '& .MuiDataGrid-virtualScroller': {
-            overflow: 'hidden'
-          }
-        }}
-        autosizeOptions={{
-          columns: [
-            'title',
-            'description',
-            'department',
-            'data_subject_type',
-            'action',
-          ],
-          includeOutliers: true,
-          includeHeaders: true,
-        }}
-      />
-    </Paper>
+    <>
+      <Paper sx={{ height: '100%', width: '100%', overflowX: 'auto', textWrap: 'nowrap' }}>
+        <DataGrid
+          loading={loading}
+          rows={rows}
+          columns={columns}
+          initialState={{ pagination: { paginationModel } }}
+          pageSizeOptions={[5, 10]}
+          sx={{
+            border: 0,
+            width: !isMobile ? '100%' : 900,
+            '& .MuiDataGrid-virtualScroller': {
+              overflow: 'hidden'
+            }
+          }}
+          autosizeOptions={{
+            columns: [
+              'title',
+              'description',
+              'department',
+              'data_subject_type',
+              'action',
+            ],
+            includeOutliers: true,
+            includeHeaders: true,
+          }}
+        />
+
+      </Paper>
+      <Dialog onClose={handleClose} open={openConfirmModal}>
+        <DialogTitle>Confirm delete data?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure to delete this data?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <MyButton
+            onClick={handleClose}
+            color="error"
+            disabled={deleteLoading}
+          >
+            Disagree
+          </MyButton>
+          <MyButton
+            onClick={handleDeleteData}
+            autoFocus
+            disabled={deleteLoading}
+          >
+            {deleteLoading ? 'Processing...' : 'Agree'}
+          </MyButton>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }
