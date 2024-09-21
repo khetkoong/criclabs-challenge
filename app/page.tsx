@@ -62,13 +62,17 @@ export default function Page() {
     setLoading(true)
     try {
       const supabase = createClient()
-      const { data } = await supabase.from('data_mappings').select('*').order('id', { ascending: false })
+      const { data } = await supabase
+        .from('data_mappings')
+        .select('*')
+        .order('created_at', { ascending: false })
+
       const formattedData = data?.map((d) => ({
         id: d?.id,
         title: d?.title,
-        description: d?.description,
+        description: d?.description || '-',
         department: d?.department,
-        data_subject_type: d?.data_subject_type,
+        data_subject_type: d?.data_subject_type || '-',
       })) as Rows[]
 
       setRows(formattedData)

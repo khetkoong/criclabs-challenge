@@ -40,7 +40,7 @@ const DrawerFilter = (props: DrawerFilterProps) => {
       const instanceSupabase = supabase
         .from('data_mappings')
         .select("*")
-        .order('id', { ascending: false })
+        .order('created_at', { ascending: false })
 
       let findDepartment = ''
       for (const [key, value] of Object.entries(values?.department)) {
@@ -75,9 +75,9 @@ const DrawerFilter = (props: DrawerFilterProps) => {
       const formattedData = data_mappings?.map((d) => ({
         id: d?.id,
         title: d?.title,
-        description: d?.description,
+        description: d?.description || '-',
         department: d?.department,
-        data_subject_type: d?.data_subject_type,
+        data_subject_type: d?.data_subject_type || '-',
       })) as Rows[]
 
       setRows(formattedData)

@@ -1,5 +1,5 @@
-import { Box, Drawer, InputLabel, Paper, Stack, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
-import React, { LegacyRef, memo, useEffect, useRef, useState } from 'react'
+import { Box, Drawer, Stack, Toolbar, Typography, useMediaQuery, useTheme } from '@mui/material'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import Input, { OptionsType } from './Input'
 import { createClient } from '../utils/supabase/client'
 import { SubmitHandler, useForm } from "react-hook-form"
@@ -22,7 +22,7 @@ const initialValues = {
 
 const schema = z.object({
   title: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string(),
   department: z.string().min(1),
   data_subject_type: z.array(z.string())
 })
@@ -38,7 +38,7 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
   const [departmentOptions, setDepartmentOptions] = useState<OptionsType[]>([])
   const [dataSubjectTypeOptions, setDataSubjectTypeOptions] = useState<OptionsType[]>([])
-  const submitRef = useRef<HTMLButtonElement | null>()
+  const submitRef = useRef<HTMLButtonElement | null | undefined>()
   const supabase = createClient()
 
   const {
@@ -66,7 +66,7 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
       reset()
       onClose(true)
     } catch (error) {
-      message('error', 'Something went wrong!')
+      message('error', `Something went wrong!: ${error}`)
     }
   }
 
@@ -122,7 +122,7 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
           </Box>
         </Toolbar>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <button type="submit" ref={submitRef as any} hidden />
+          <button type="submit" ref={submitRef} hidden />
           <Stack direction="column" spacing={1} p={3}>
             <Input
               label="Title"
@@ -138,8 +138,6 @@ const DrawerAddData = (props: DrawerAddDataProps) => {
               name="description"
               control={control}
               type="text"
-              error={!!errors?.description?.message}
-              helperText={errors?.description?.message}
               disabled={isSubmitting}
             />
             <Input

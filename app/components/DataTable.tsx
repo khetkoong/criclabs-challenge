@@ -112,7 +112,7 @@ export default function DataTable(props: DataTableProps) {
             border: 0,
             width: !isMobile ? '100%' : 900,
             '& .MuiDataGrid-virtualScroller': {
-              overflow: 'hidden'
+              overflowX: 'hidden'
             }
           }}
           autosizeOptions={{
